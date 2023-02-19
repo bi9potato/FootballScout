@@ -1,6 +1,6 @@
 # CONTRIBUTING
 
-## Henrt Luo 
+## Henry Luo 
 Design and development of panel 1
 
 ## Renghe Tang
