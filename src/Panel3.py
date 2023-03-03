@@ -11,8 +11,6 @@ import statsmodels.api as sm
 import altair as alt
 alt.data_transformers.disable_max_rows()
 
-from Panel3 import get_panel3_content
-
 # dataset
 data_add = '../data/processed/all_players___.csv'
 df = pd.read_csv(data_add, index_col=0)
@@ -38,35 +36,75 @@ player_ids = [ i for i in player_name_id.values() ]
 # dash
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
 
-app.layout = dbc.Container([
+def get_panel3_content():
+    return dbc.Container([
 
-    # Panels
-    dbc.Tabs([
+        dbc.Row([
 
+            # sidebar
+            dbc.Col([
 
-        # Panel1
-        dbc.Tab([
+                # title
+                # html.Div([
+                #     html.P('Panel3')
+                # ]),
+                html.Br(),
 
-        ], label='Panel1'),
+                # dropdown
+                html.Div([
 
+                    # dd league
+                    html.Label('League'),
+                    dcc.Dropdown(
+                        id='p3_dd_league',
+                        options=[{'label': 'ALL', 'value': 'ALL'}] + [
+                            {'label': league_name, 'value': league_name_id[league_name]} for league_name in
+                            league_names],
+                        value='ALL',
+                        placeholder='Select one league...',
+                        # multi=True
 
-        # Panel2
-        dbc.Tab([
+                    ),
 
+                    # dd team
+                    html.Label('Team'),
+                    dcc.Dropdown(
+                        id='p3_dd_team',
+                        # options=[{'label': 'plz Choose league first', 'value': ''},],
+                        value='ALL',
+                        placeholder='Select one team...',
+                        # multi=True
+                    ),
 
-        ], label='Panel2'),
+                    # dd player
+                    html.Label('Player'),
+                    dcc.Dropdown(
+                        id='p3_dd_player',
+                        # value='J. Gillet',
+                        placeholder='Select players...',
+                        # multi=True,
+                    ),
 
+                ]),
 
-        # Panel3
-        dbc.Tab([
+            ], width=4),
 
-            get_panel3_content()
+            # plot
+            dbc.Col([
 
-        ], label='Panel3')
+                # plot 1
+                html.Iframe(
+                    id='p3_Iframe_1',
+                    style={'border-width': '0', 'width': '100%', 'height': '400px'}
+                ),
+
+            ]),
+
+        ])
 
     ])
 
-])
+app.layout = get_panel3_content()
 
 # Panel3
 ## dropdown2 need dropdown1 has a value firstly
@@ -110,7 +148,7 @@ def p3_dd_player_get_options(p3_dd_league_value, p3_dd_team_value ):
     df_selected = df[df['games_appearences'] != 0]
     df_selected.dropna(subset=['games_rating'], inplace=True)
     # 过滤得到有多个game_rating的人（删掉只有一个game_rating的人），因为只有一个数据不能预测
-    df_selected = df_selected.groupby('player_id').filter(lambda x: len(x) > 1)  # Filter out individuals with only one game_rating value (delete individuals with only one game_rating value), as a single data point is not enough for prediction.
+    df_selected = df_selected.groupby('player_id').filter(lambda x: len(x) > 1) # Filter out individuals with only one game_rating value (delete individuals with only one game_rating value), as a single data point is not enough for prediction.
     # 过滤出只有一个赛季只有一个game_rating的人（删掉只有一个赛季有多个game_rating的人），因为无法用它预测
     df_selected = df_selected.groupby(['player_id', 'league_season']).filter(lambda x: len(x) == 1)  # Filter out individuals with only one game_rating value in one season (delete individuals with multiple game_rating values in one season), as it is not possible to make predictions based on such data.
 
@@ -131,7 +169,7 @@ def p3_draw_plots(p3_dd_player_value):
 
     df_selected = df[df['games_appearences'] != 0]
     df_selected.dropna(subset=['games_rating'], inplace=True)
-
+    # df_selected = df_selected.groupby('player_id').filter(lambda x: len(x) > 1)  # 删掉只有一个game——rating的人，因为无法用它预测
 
     if not p3_dd_player_value:
         return None
@@ -161,5 +199,8 @@ def p3_draw_plots(p3_dd_player_value):
 
         return chart1.to_html()
 
+
+
+
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(debug = True)
