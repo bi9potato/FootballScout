@@ -13,7 +13,7 @@ alt.data_transformers.disable_max_rows()
 from Panel1 import get_panel1_content
 
 # dataset
-data_add = '../data/processed/all_players__.csv'
+data_add = '../data/processed/all_players___.csv'
 df = pd.read_csv(data_add, index_col=0)
 
 ## panel 1

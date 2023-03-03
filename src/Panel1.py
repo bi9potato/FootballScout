@@ -11,7 +11,7 @@ import altair as alt
 alt.data_transformers.disable_max_rows()
 
 # dataset
-data_add = '../data/processed/all_players__.csv'
+data_add = '../data/processed/all_players___.csv'
 df = pd.read_csv(data_add, index_col=0)
 
 ## panel 1
