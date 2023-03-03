@@ -10,12 +10,9 @@ import pandas as pd
 import altair as alt
 alt.data_transformers.disable_max_rows()
 
-from Panel2 import get_panel2_content
-
 # dataset
 data_add = '../data/processed/all_players___.csv'
 df = pd.read_csv(data_add, index_col=0)
-
 
 ## Panel 2
 min_year = df.league_season.min()
@@ -78,42 +75,181 @@ stats = [
     'player_weight',
 ]
 
-
 # dash
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
 
-app.layout = dbc.Container([
+def get_panel2_content():
+    return dbc.Container([
 
-    # Panels
-    dbc.Tabs([
+        dbc.Row([
 
+            # sidebar
+            dbc.Col([
 
-        # Panel1
-        dbc.Tab([
+                # # title
+                # html.Div([
+                #     html.P('Panel2')
+                # ]),
+                html.Br(),
 
+                # slider
+                html.Label('Year Range'),
+                html.Div([
+                    dcc.RangeSlider(
+                        id='p2_rs_year',
+                        min=min_year, max=max_year,
+                        value=[min_year, max_year],
+                        step=1,
+                        marks={i: str(i) for i in range(min_year, max_year + 1)}
+                    )
+                ]),
+                html.Br(),
 
-        ], label='Panel1'),
+                # dropdown
+                html.Div([
 
+                    # dd league
+                    html.Label('League'),
+                    dcc.Dropdown(
+                        id='p2_dd_league',
+                        options=[{'label': 'ALL', 'value': 'ALL'}] + [
+                            {'label': league_name, 'value': league_name_id[league_name]} for league_name in
+                            league_names],
+                        value='ALL',
+                        placeholder='Select one league...',
+                        # multi=True
 
-        # Panel2
-        dbc.Tab([
+                    ),
 
+                    # dd team
+                    html.Label('Team'),
+                    dcc.Dropdown(
+                        id='p2_dd_team',
+                        # options=[{'label': 'plz Choose league first', 'value': ''},],
+                        value='ALL',
+                        placeholder='Select one team...',
+                        # multi=True
+                    ),
 
-            get_panel2_content()
+                    # dd players
+                    html.Label('Players'),
+                    dcc.Dropdown(
+                        id='p2_dd_player',
+                        # value=['', ],
+                        placeholder='Select players...',
+                        multi=True,
+                    ),
 
+                ]),
 
-        ], label='Panel2'),
+            ], width=4),
 
+            # plots
+            dbc.Col([
 
-        # Panel3
-        dbc.Tab([
+                # plot 1-2
+                dbc.Row([
 
+                    # plot 1
+                    dbc.Col([
 
-        ], label='Panel3')
+                        # test2
+                        # html.Div(
+                        #     id = 'p2_test_Div',
+                        #     children = 'p2_test_Div'
+                        # ),
+
+                        # dd status 1
+                        dcc.Dropdown(
+                            id='p2_dd_stat1',
+                            options=[{'label': stat.replace('_', ' '), 'value': stat} for stat in stats],
+                            value='games_rating',
+                            placeholder='Select one stat...',
+                            # multi=True,
+                        ),
+
+                        # plot 1
+                        html.Iframe(
+                            id='p2_Iframe_1',
+                            style={'border-width': '0', 'width': '100%', 'height': '400px'}
+                        ),
+                    ]),
+
+                    # plot 2
+                    dbc.Col([
+
+                        # dd status 1
+                        dcc.Dropdown(
+                            id='p2_dd_stat2',
+                            options=[{'label': stat.replace('_', ' '), 'value': stat} for stat in stats],
+                            value='shots_on',
+                            placeholder='Select one stat...',
+                            # multi=True,
+                        ),
+
+                        html.Iframe(
+                            id='p2_Iframe_2',
+                            style={'border-width': '0', 'width': '100%', 'height': '400px'}
+                        ),
+                    ]),
+
+                ]),
+
+                # plot 3-4
+                dbc.Row([
+
+                    # plot 3
+                    dbc.Col([
+
+                        # dd status 3
+                        dcc.Dropdown(
+                            id='p2_dd_stat3',
+                            options=[{'label': stat.replace('_', ' '), 'value': stat} for stat in stats],
+                            value='goals_total',
+                            placeholder='Select one stat...',
+                            # multi=True,
+                        ),
+
+                        # plot 3
+                        html.Iframe(
+                            id='p2_Iframe_3',
+                            style={'border-width': '0', 'width': '100%', 'height': '400px'}
+                        ),
+
+                    ]),
+
+                    # plot 4
+                    dbc.Col([
+
+                        # dd status 4
+                        dcc.Dropdown(
+                            id='p2_dd_stat4',
+                            options=[{'label': stat.replace('_', ' '), 'value': stat} for stat in stats],
+                            value='penalty_scored',
+                            placeholder='Select one stat...',
+                            # multi=True,
+                        ),
+
+                        # plot 4
+                        html.Iframe(
+                            id='p2_Iframe_4',
+                            style={'border-width': '0', 'width': '100%', 'height': '400px'}
+                        ),
+
+                    ]),
+
+                ])
+
+            ])
+
+        ])
+
 
     ])
 
-])
+
+
+app.layout = get_panel2_content()
 
 
 
