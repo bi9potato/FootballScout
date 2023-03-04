@@ -131,7 +131,7 @@ app.layout = dbc.Container([
 
 
 # Panel3
-## dropdown2 need dropdown1 has a value firstly
+# dropdown2 need dropdown1 has a value firstly
 @ app.callback(
     Output('p3_dd_team', 'options'),
     Input('p3_dd_league', 'value'),
@@ -143,6 +143,12 @@ def p3_dd_league_get_options(p3_dd_league_value):
         temp_league_ids = league_ids
     else:
         temp_league_ids = [p3_dd_league_value]
+
+    # df_selected = df.query(f'`league_id` == {p1_dd_league_value}')
+    df_selected = df.query(f'`league_id`.isin(@temp_league_ids)')
+    specified_teams = df_selected.team_name.unique()
+
+    return [{'label': 'ALL', 'value': 'ALL'}] + [{'label': team_name, 'value': team_name_id[team_name]} for team_name in specified_teams]
 
 
 # Panel1
