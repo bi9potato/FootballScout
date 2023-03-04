@@ -10,8 +10,6 @@ import pandas as pd
 import altair as alt
 alt.data_transformers.disable_max_rows()
 
-from Panel1 import get_panel1_content
-
 # dataset
 data_add = '../data/processed/all_players___.csv'
 df = pd.read_csv(data_add, index_col=0)
@@ -33,40 +31,115 @@ team_name_id = df.drop_duplicates(subset=['team_name', 'team_id'])[['team_name',
 team_names = df.team_name.unique()
 team_ids = [ i for i in team_name_id.values() ]
 
-
 # dash
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
 
-app.layout = dbc.Container([
+def get_panel1_content():
+    return dbc.Container([
 
-    # Panels
-    dbc.Tabs([
+        dbc.Row([
 
-
-        # Panel1
-        dbc.Tab([
-
-            get_panel1_content()
-
-        ], label='Panel1'),
+            # sidebar
+            dbc.Col([
 
 
-        # Panel2
-        dbc.Tab([
+                html.Br(),
 
+                # slider
+                html.Div([
+                    html.Label('Year Range'),
+                    dcc.RangeSlider(
+                        id='p1_rs_year',
+                        min=min_year, max=max_year,
+                        value=[min_year, max_year],
+                        step=1,
+                        marks={i: str(i) for i in range(min_year, max_year + 1)}
+                    )
+                ]),
+                html.Br(),
 
-        ], label='Panel2'),
+                # dropdown
+                html.Div([
 
+                    # dd league
+                    html.Label('League'),
+                    dcc.Dropdown(
+                        id='p1_dd_league',
+                        options=[{'label': 'ALL', 'value': 'ALL'}] + [
+                            {'label': league_name, 'value': league_name_id[league_name]} for league_name in
+                            league_names],
+                        value='ALL',
+                        placeholder='Select one league...',
+                        # multi=True
 
-        # Panel3
-        dbc.Tab([
+                    ),
 
+                    # dd team
+                    html.Label('Team'),
+                    dcc.Dropdown(
+                        id='p1_dd_team',
+                        # options=[{'label': 'plz Choose league first', 'value': ''},],
+                        value='ALL',
+                        placeholder='Select one team...',
+                        # multi=True
+                    )
 
-        ], label='Panel3')
+                ])
+
+            ], width=4),
+
+            # plots
+            dbc.Col([
+
+                # plot 1-2
+                dbc.Row([
+
+                    # plot1
+                    dbc.Col(
+                        html.Iframe(
+                            id='p1_Iframe_1',
+                            style={'border-width': '0', 'width': '100%', 'height': '400px'}
+                        ),
+                    ),
+
+                    # plot2
+                    dbc.Col(
+                        html.Iframe(
+                            id='p1_Iframe_2',
+                            style={'border-width': '0', 'width': '100%', 'height': '400px'}
+                        ),
+                    ),
+
+                ]),
+
+                # plot 3-4
+                dbc.Row([
+
+                    # plot3
+                    dbc.Col(
+                        html.Iframe(
+                            id='p1_Iframe_3',
+                            style={'border-width': '0', 'width': '100%', 'height': '400px'}
+                        ),
+                    ),
+
+                    # plot4
+                    dbc.Col(
+                        html.Iframe(
+                            id='p1_Iframe_4',
+                            style={'border-width': '0', 'width': '100%', 'height': '400px'}
+                        ),
+                    ),
+
+                ])
+
+            ])
+
+        ])
 
     ])
 
-])
+app.layout = get_panel1_content()
 
 
 # Panel1
@@ -246,6 +319,7 @@ def draw_plot2(p1_rs_year_value, p1_dd_league_value, p1_dd_team_value):
     ).mark_boxplot().properties(title='Boxplot of Game Rating by Season')
 
     return chart4.to_html()
+
 
 
 if __name__ == '__main__':
