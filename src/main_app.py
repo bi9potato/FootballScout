@@ -91,6 +91,9 @@ stats = [
 # dash
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
 
+server = app.server
+
+
 app.layout = dbc.Container([
 
     # Panels
