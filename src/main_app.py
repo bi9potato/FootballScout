@@ -11,13 +11,13 @@ import statsmodels.api as sm
 import altair as alt
 alt.data_transformers.disable_max_rows()
 
-from Panel1 import get_panel1_content
-from Panel2 import get_panel2_content
-from Panel3 import get_panel3_content
+from src.Panel1 import get_panel1_content
+from src.Panel2 import get_panel2_content
+from src.Panel3 import get_panel3_content
 
 
 # dataset
-data_add = '../data/processed/all_players___.csv'
+data_add = './data/processed/all_players___.csv'
 df = pd.read_csv(data_add, index_col=0)
 
 
