@@ -42,3 +42,4 @@ We have implemented all proposed features.
 ## Future Improvement
 - Explore the possibility of implementing an age slider.
 - Consider adding more gunicorn workers or threads to load the graphs faster.
+- Try different themes to make the dashboard more aesthetically pleasing.
