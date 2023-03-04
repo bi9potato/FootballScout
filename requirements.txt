@@ -5,3 +5,4 @@ statsmodels
 altair
 gunicorn
 plotly
+Panel1
