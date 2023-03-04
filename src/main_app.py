@@ -13,7 +13,7 @@ alt.data_transformers.disable_max_rows()
 
 from src.Panel1 import get_panel1_content
 from src.Panel2 import get_panel2_content
-from Panel3 import get_panel3_content
+from src.Panel3 import get_panel3_content
 
 
 # dataset
