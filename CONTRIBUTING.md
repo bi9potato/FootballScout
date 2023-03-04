@@ -1,10 +1,10 @@
 # CONTRIBUTING
 
 ## Henry Luo 
-Design and development of panel 1
+Design and development of panel 2
 
 ## Renghe Tang
-Design and development of panel 2
+Design and development of panel 1
 
 ## Weijia Lyu
 Design and development of panel 3
