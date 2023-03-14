@@ -11,7 +11,7 @@ import altair as alt
 alt.data_transformers.disable_max_rows()
 
 # dataset
-data_add = './data/processed/all_players___.csv'
+data_add = './data/processed/all_players____.csv'
 df = pd.read_csv(data_add, index_col=0)
 
 ## Panel 2
@@ -169,10 +169,12 @@ def get_panel2_content():
                         ),
 
                         # plot 1
-                        html.Iframe(
-                            id='p2_Iframe_1',
-                            style={'border-width': '0', 'width': '100%', 'height': '400px'}
-                        ),
+                        dbc.Spinner(
+                            html.Iframe(
+                                id='p2_Iframe_1',
+                                style={'border-width': '0', 'width': '100%', 'height': '400px'}
+                            ),
+                        )
                     ]),
 
                     # plot 2
@@ -187,9 +189,11 @@ def get_panel2_content():
                             # multi=True,
                         ),
 
-                        html.Iframe(
-                            id='p2_Iframe_2',
-                            style={'border-width': '0', 'width': '100%', 'height': '400px'}
+                        dbc.Spinner(
+                            html.Iframe(
+                                id='p2_Iframe_2',
+                                style={'border-width': '0', 'width': '100%', 'height': '400px'}
+                            ),
                         ),
                     ]),
 
@@ -211,9 +215,11 @@ def get_panel2_content():
                         ),
 
                         # plot 3
-                        html.Iframe(
-                            id='p2_Iframe_3',
-                            style={'border-width': '0', 'width': '100%', 'height': '400px'}
+                        dbc.Spinner(
+                            html.Iframe(
+                                id='p2_Iframe_3',
+                                style={'border-width': '0', 'width': '100%', 'height': '400px'}
+                            ),
                         ),
 
                     ]),
@@ -231,9 +237,11 @@ def get_panel2_content():
                         ),
 
                         # plot 4
-                        html.Iframe(
-                            id='p2_Iframe_4',
-                            style={'border-width': '0', 'width': '100%', 'height': '400px'}
+                        dbc.Spinner(
+                            html.Iframe(
+                                id='p2_Iframe_4',
+                                style={'border-width': '0', 'width': '100%', 'height': '400px'}
+                            ),
                         ),
 
                     ]),
@@ -392,5 +400,5 @@ def draw_p2_plots(p2_rs_year_value, p2_dd_league_value, p2_dd_team_value, p2_dd_
     return chart1.to_html(), chart2.to_html(), chart3.to_html(), chart4.to_html()
 
 
-if __name__ == '__main__':
-    app.run_server(debug=True)
+# if __name__ == '__main__':
+#     app.run_server(debug=True)
