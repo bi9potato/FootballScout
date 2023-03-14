@@ -12,7 +12,7 @@ import altair as alt
 alt.data_transformers.disable_max_rows()
 
 # dataset
-data_add = './data/processed/all_players___.csv'
+data_add = './data/processed/all_players____.csv'
 df = pd.read_csv(data_add, index_col=0)
 
 ## Panel 3
@@ -93,9 +93,11 @@ def get_panel3_content():
             dbc.Col([
 
                 # plot 1
-                html.Iframe(
-                    id='p3_Iframe_1',
-                    style={'border-width': '0', 'width': '100%', 'height': '400px'}
+                dbc.Spinner(
+                    html.Iframe(
+                        id='p3_Iframe_1',
+                        style={'border-width': '0', 'width': '100%', 'height': '400px'}
+                    ),
                 ),
 
             ]),
@@ -202,5 +204,5 @@ def p3_draw_plots(p3_dd_player_value):
 
 
 
-if __name__ == '__main__':
-    app.run_server(debug = True)
+# if __name__ == '__main__':
+#     app.run_server(debug = True)
