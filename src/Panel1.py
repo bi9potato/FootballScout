@@ -11,12 +11,15 @@ import altair as alt
 alt.data_transformers.disable_max_rows()
 
 # dataset
-data_add = './data/processed/all_players___.csv'
+data_add = './data/processed/all_players____.csv'
 df = pd.read_csv(data_add, index_col=0)
 
 ## panel 1
 min_year = df.league_season.min()
 max_year = df.league_season.max()
+
+min_age = int( df.player_age.min() )
+max_age = int( df.player_age.max() )
 
 league_name_id = {'Serie A': 135,
                    'La Liga': 140,
@@ -47,6 +50,8 @@ def get_panel1_content():
 
                 # slider
                 html.Div([
+
+                    # year slider
                     html.Label('Year Range'),
                     dcc.RangeSlider(
                         id='p1_rs_year',
@@ -54,7 +59,18 @@ def get_panel1_content():
                         value=[min_year, max_year],
                         step=1,
                         marks={i: str(i) for i in range(min_year, max_year + 1)}
-                    )
+                    ),
+                    html.Br(),
+
+                    html.Label('Age Range'),
+                    dcc.RangeSlider(
+                        id='p1_rs_age',
+                        min=min_age, max=max_age,
+                        value=[min_age, max_age],
+                        step=1,
+                        marks={i: str(i) for i in range(min_age, max_age + 1, 4)}
+                    ),
+
                 ]),
                 html.Br(),
 
@@ -96,18 +112,27 @@ def get_panel1_content():
 
                     # plot1
                     dbc.Col(
-                        html.Iframe(
-                            id='p1_Iframe_1',
-                            style={'border-width': '0', 'width': '100%', 'height': '400px'}
-                        ),
+                        # html.Iframe(
+                        #     id='p1_Iframe_1',
+                        #     style={'border-width': '0', 'width': '100%', 'height': '400px'}
+                        # ),
+                        
+                        dbc.Spinner(
+                            html.Iframe(
+                                id='p1_Iframe_1',
+                                style={'border-width': '0', 'width': '100%', 'height': '400px'}
+                            ),
+                        )
                     ),
 
                     # plot2
                     dbc.Col(
-                        html.Iframe(
-                            id='p1_Iframe_2',
-                            style={'border-width': '0', 'width': '100%', 'height': '400px'}
-                        ),
+                        dbc.Spinner(
+                            html.Iframe(
+                                id='p1_Iframe_2',
+                                style={'border-width': '0', 'width': '100%', 'height': '400px'}
+                            ),
+                        )
                     ),
 
                 ]),
@@ -117,18 +142,22 @@ def get_panel1_content():
 
                     # plot3
                     dbc.Col(
-                        html.Iframe(
-                            id='p1_Iframe_3',
-                            style={'border-width': '0', 'width': '100%', 'height': '400px'}
-                        ),
+                        dbc.Spinner(
+                            html.Iframe(
+                                id='p1_Iframe_3',
+                                style={'border-width': '0', 'width': '100%', 'height': '400px'}
+                            ),
+                        )
                     ),
 
                     # plot4
                     dbc.Col(
-                        html.Iframe(
-                            id='p1_Iframe_4',
-                            style={'border-width': '0', 'width': '100%', 'height': '400px'}
-                        ),
+                        dbc.Spinner(
+                            html.Iframe(
+                                id='p1_Iframe_4',
+                                style={'border-width': '0', 'width': '100%', 'height': '400px'}
+                            ),
+                        )
                     ),
 
                 ])
@@ -163,12 +192,15 @@ def p1_dd_league_get_options(p1_dd_league_value):
 
 ## Panel1 - plot 1
 @ app.callback(
-Output('p1_Iframe_1', 'srcDoc'),
+    Output('p1_Iframe_1', 'srcDoc'),
+
     Input('p1_rs_year', 'value'),
+    Input('p1_rs_age', 'value'),
     Input('p1_dd_league', 'value'),
     Input('p1_dd_team', 'value'),
 )
-def draw_plot1(p1_rs_year_value, p1_dd_league_value, p1_dd_team_value):
+def draw_plot1(p1_rs_year_value, p1_rs_age_value,
+               p1_dd_league_value, p1_dd_team_value):
 
     temp_league_ids = []
     if p1_dd_league_value == 'ALL':
@@ -184,8 +216,10 @@ def draw_plot1(p1_rs_year_value, p1_dd_league_value, p1_dd_team_value):
 
     years = [i for i in range(p1_rs_year_value[0], p1_rs_year_value[1]+1)]
 
+    ages = [i for i in range(p1_rs_age_value[0], p1_rs_age_value[1] + 1)]
+
     # df_selected = df.query(f'`team_id` == {p1_dd_team_value} & `league_id`.isin(@temp_league_ids) & `league_season`.isin(@years)')
-    df_selected = df.query('`team_id`.isin(@temp_team_ids) & `league_id`.isin(@temp_league_ids) & `league_season`.isin(@years)')
+    df_selected = df.query('`team_id`.isin(@temp_team_ids) & `league_id`.isin(@temp_league_ids) & `league_season`.isin(@years) & `player_age`.isin(@ages)')
 
     # get top 5 ids
     df_mean = df_selected.groupby('player_id').mean('games_rating').reset_index()
@@ -204,12 +238,15 @@ def draw_plot1(p1_rs_year_value, p1_dd_league_value, p1_dd_team_value):
 
 ## Panel1 - plot 2
 @ app.callback(
-Output('p1_Iframe_2', 'srcDoc'),
+    Output('p1_Iframe_2', 'srcDoc'),
+
     Input('p1_rs_year', 'value'),
+    Input('p1_rs_age', 'value'),
     Input('p1_dd_league', 'value'),
     Input('p1_dd_team', 'value'),
 )
-def draw_plot2(p1_rs_year_value, p1_dd_league_value, p1_dd_team_value):
+def draw_plot2(p1_rs_year_value, p1_rs_age_value,
+               p1_dd_league_value, p1_dd_team_value):
     # pass
 
     # drop na
@@ -217,7 +254,8 @@ def draw_plot2(p1_rs_year_value, p1_dd_league_value, p1_dd_team_value):
     df_dropna = df.dropna(subset=['games_rating', 'league_season'])
 
     # args
-    years = [i for i in range(p1_rs_year_value[0], p1_rs_year_value[1])]
+    years = [i for i in range(p1_rs_year_value[0], p1_rs_year_value[1]+1)]
+    ages = [i for i in range(p1_rs_age_value[0], p1_rs_age_value[1] + 1)]
 
     temp_league_ids = []
     if p1_dd_league_value == 'ALL':
@@ -232,7 +270,7 @@ def draw_plot2(p1_rs_year_value, p1_dd_league_value, p1_dd_team_value):
         temp_team_ids = [p1_dd_team_value]
 
     # df_selected = df_dropna.query('`league_season`.isin(@years)')
-    df_selected = df_dropna.query('`team_id`.isin(@temp_team_ids) & `league_id`.isin(@temp_league_ids) & `league_season`.isin(@years)')
+    df_selected = df_dropna.query('`team_id`.isin(@temp_team_ids) & `league_id`.isin(@temp_league_ids) & `league_season`.isin(@years) & `player_age`.isin(@ages)')
 
     chart2 = alt.Chart(df_selected).transform_density(
         'games_rating',
@@ -247,11 +285,14 @@ def draw_plot2(p1_rs_year_value, p1_dd_league_value, p1_dd_team_value):
 ## Panel1 - plot 3
 @ app.callback(
     Output('p1_Iframe_3', 'srcDoc'),
+
     Input('p1_rs_year', 'value'),
+    Input('p1_rs_age', 'value'),
     Input('p1_dd_league', 'value'),
     Input('p1_dd_team', 'value'),
 )
-def draw_plot2(p1_rs_year_value,p1_dd_league_value, p1_dd_team_value):
+def draw_plot2(p1_rs_year_value, p1_rs_age_value,
+               p1_dd_league_value, p1_dd_team_value):
     # pass
 
     # drop na
@@ -259,7 +300,8 @@ def draw_plot2(p1_rs_year_value,p1_dd_league_value, p1_dd_team_value):
     df_dropna = df.dropna(subset=['games_rating', 'league_season'])
 
     # args
-    years = [i for i in range(p1_rs_year_value[0], p1_rs_year_value[1])]
+    years = [i for i in range(p1_rs_year_value[0], p1_rs_year_value[1]+1)]
+    ages = [i for i in range(p1_rs_age_value[0], p1_rs_age_value[1] + 1)]
 
     temp_league_ids = []
     if p1_dd_league_value == 'ALL':
@@ -275,7 +317,7 @@ def draw_plot2(p1_rs_year_value,p1_dd_league_value, p1_dd_team_value):
 
 
     # df_selected = df_dropna.query('`league_season`.isin(@years)')
-    df_selected = df_dropna.query('`team_id`.isin(@temp_team_ids) & `league_id`.isin(@temp_league_ids) & `league_season`.isin(@years)')
+    df_selected = df_dropna.query('`team_id`.isin(@temp_team_ids) & `league_id`.isin(@temp_league_ids) & `league_season`.isin(@years) & `player_age`.isin(@ages)')
 
     chart3 = alt.Chart(df_selected).encode(
         x=alt.X('games_rating:Q', bin=alt.Bin(maxbins=200), title='Game Rating'),
@@ -287,15 +329,19 @@ def draw_plot2(p1_rs_year_value,p1_dd_league_value, p1_dd_team_value):
 ## Panel1 - plot 4
 @ app.callback(
     Output('p1_Iframe_4', 'srcDoc'),
+
     Input('p1_rs_year', 'value'),
+    Input('p1_rs_age', 'value'),
     Input('p1_dd_league', 'value'),
     Input('p1_dd_team', 'value'),
 )
-def draw_plot2(p1_rs_year_value, p1_dd_league_value, p1_dd_team_value):
+def draw_plot2(p1_rs_year_value, p1_rs_age_value,
+               p1_dd_league_value, p1_dd_team_value):
     # pass
 
     # args
-    years = [i for i in range(p1_rs_year_value[0], p1_rs_year_value[1])]
+    years = [i for i in range(p1_rs_year_value[0], p1_rs_year_value[1]+1)]
+    ages = [i for i in range(p1_rs_age_value[0], p1_rs_age_value[1] + 1)]
 
     temp_league_ids = []
     if p1_dd_league_value == 'ALL':
@@ -311,7 +357,7 @@ def draw_plot2(p1_rs_year_value, p1_dd_league_value, p1_dd_team_value):
 
 
     # df_selected = df.query('`league_season`.isin(@years)')
-    df_selected = df.query('`team_id`.isin(@temp_team_ids) & `league_id`.isin(@temp_league_ids) & `league_season`.isin(@years)')
+    df_selected = df.query('`team_id`.isin(@temp_team_ids) & `league_id`.isin(@temp_league_ids) & `league_season`.isin(@years) & `player_age`.isin(@ages)')
 
     chart4 = alt.Chart(df_selected).encode(
         y = alt.Y('league_season:N', title='League Season'),
@@ -322,5 +368,5 @@ def draw_plot2(p1_rs_year_value, p1_dd_league_value, p1_dd_team_value):
 
 
 
-if __name__ == '__main__':
-    app.run_server(debug=True)
+# if __name__ == '__main__':
+#     app.run_server(debug=True)
