@@ -152,8 +152,12 @@ def p1_dd_league_get_options(p1_dd_league_value):
     # df_selected = df.query(f'`league_id` == {p1_dd_league_value}')
     df_selected = df.query(f'`league_id`.isin(@temp_league_ids)')
     specified_teams = df_selected.team_name.unique()
-    return [{'label': 'ALL', 'value': 'ALL' }] + [{'label': team_name, 'value': team_name_id[team_name]} for team_name in specified_teams]
-
+    if specified_teams:
+        return [{'label': 'ALL', 'value': 'ALL' }] + [{'label': team_name, 'value': team_name_id[team_name]} for team_name in specified_teams]
+    else:
+        return []
+    
+    
 ## Panel1 - plot 1
 @ app.callback(
     Output('p1_Iframe_1', 'srcDoc'),
@@ -349,8 +353,11 @@ def p2_dd_league_get_options(p2_dd_league_value):
     # df_selected = df.query(f'`league_id` == {p1_dd_league_value}')
     df_selected = df.query(f'`league_id`.isin(@temp_league_ids)')
     specified_teams = df_selected.team_name.unique()
-    return [{'label': 'ALL', 'value': 'ALL' }] + [{'label': team_name, 'value': team_name_id[team_name]} for team_name in specified_teams]
-
+    if specified_teams:
+        return [{'label': 'ALL', 'value': 'ALL' }] + [{'label': team_name, 'value': team_name_id[team_name]} for team_name in specified_teams]
+    else:
+        return []
+    
 # Panel2 - dropdown3 need dropdown1 & dropdown2 have value firstly
 @ app.callback(
     Output('p2_dd_player', 'options'),
@@ -488,8 +495,11 @@ def p3_dd_league_get_options(p3_dd_league_value):
     # df_selected = df.query(f'`league_id` == {p1_dd_league_value}')
     df_selected = df.query(f'`league_id`.isin(@temp_league_ids)')
     specified_teams = df_selected.team_name.unique()
-    return [{'label': 'ALL', 'value': 'ALL' }] + [{'label': team_name, 'value': team_name_id[team_name]} for team_name in specified_teams]
-
+    if specified_teams:
+        return [{'label': 'ALL', 'value': 'ALL' }] + [{'label': team_name, 'value': team_name_id[team_name]} for team_name in specified_teams]
+    else:
+        return []
+    
 ## Panel3 - dropdown3 need dropdown1 & dropdown2 have value firstly
 @ app.callback(
     Output('p3_dd_player', 'options'),
