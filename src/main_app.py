@@ -151,7 +151,7 @@ def p1_dd_league_get_options(p1_dd_league_value):
 
     # df_selected = df.query(f'`league_id` == {p1_dd_league_value}')
     df_selected = df.query(f'`league_id`.isin(@temp_league_ids)')
-    specified_teams = df_selected.team_name.unique()
+    specified_teams = df_selected.team_name.unique().tolist()
     if specified_teams:
         return [{'label': 'ALL', 'value': 'ALL' }] + [{'label': team_name, 'value': team_name_id[team_name]} for team_name in specified_teams]
     else:
@@ -352,7 +352,7 @@ def p2_dd_league_get_options(p2_dd_league_value):
 
     # df_selected = df.query(f'`league_id` == {p1_dd_league_value}')
     df_selected = df.query(f'`league_id`.isin(@temp_league_ids)')
-    specified_teams = df_selected.team_name.unique()
+    specified_teams = df_selected.team_name.unique().tolist()
     if specified_teams:
         return [{'label': 'ALL', 'value': 'ALL' }] + [{'label': team_name, 'value': team_name_id[team_name]} for team_name in specified_teams]
     else:
@@ -380,7 +380,7 @@ def p2_dd_player_get_options(p2_dd_league_value, p2_dd_team_value ):
 
     # df_selected = df.query(f'`league_id` == {p1_dd_league_value}')
     df_selected = df.query('`league_id`.isin(@temp_league_ids) & `team_id`.isin(@temp_team_ids) ')
-    specified_players = df_selected.player_name.unique()
+    specified_players = df_selected.player_name.unique().tolist()
     return [{'label': player_name, 'value': player_name_id[player_name]} for player_name in specified_players]
 
 # Panel2 - plots
@@ -494,7 +494,7 @@ def p3_dd_league_get_options(p3_dd_league_value):
 
     # df_selected = df.query(f'`league_id` == {p1_dd_league_value}')
     df_selected = df.query(f'`league_id`.isin(@temp_league_ids)')
-    specified_teams = df_selected.team_name.unique()
+    specified_teams = df_selected.team_name.unique().tolist()
     if specified_teams:
         return [{'label': 'ALL', 'value': 'ALL' }] + [{'label': team_name, 'value': team_name_id[team_name]} for team_name in specified_teams]
     else:
@@ -531,7 +531,7 @@ def p3_dd_player_get_options(p3_dd_league_value, p3_dd_team_value ):
     #     df_selected[column] = df_selected[column].fillna(0)
 
     df_selected = df_selected.query('`league_id`.isin(@temp_league_ids) & `team_id`.isin(@temp_team_ids)')
-    specified_players = df_selected.player_name.unique()
+    specified_players = df_selected.player_name.unique().tolist()
 
     return [{'label': player_name, 'value': player_name_id[player_name]} for player_name in specified_players]
 
