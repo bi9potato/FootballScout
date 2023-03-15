@@ -156,7 +156,65 @@ def p1_dd_league_get_options(p1_dd_league_value):
         return [{'label': 'ALL', 'value': 'ALL' }] + [{'label': team_name, 'value': team_name_id[team_name]} for team_name in specified_teams]
     else:
         return []
+
+## Panel1 - modify year slider depending on team
+@ app.callback(
+    Output('p1_rs_year', 'min'),
+    Output('p1_rs_year', 'max'),
+    Output('p1_rs_year', 'value'),
+    Output('p1_rs_year', 'marks'),
     
+    Input('p1_dd_team', 'value'),
+)
+def p1_rs_year_get_options(p1_dd_team_value):
+
+    temp_team_ids = []
+    if p1_dd_team_value == 'ALL':
+        temp_team_ids = team_ids
+    else:
+        temp_team_ids = [p1_dd_team_value]
+        
+    if not p1_dd_team_value:
+        return min_year, max_year, [min_year, max_year], {i: str(i) for i in range(min_year, max_year + 1)}
+    else:
+        df_selected = df.query(f'`team_id`.isin(@temp_team_ids)')
+        selected_min_year = int( df_selected.league_season.min() )
+        selected_max_year = int( df_selected.league_season.max() )
+        return selected_min_year, selected_max_year, [selected_min_year, selected_max_year], {i: str(i) for i in range(selected_min_year, selected_max_year + 1)}
+
+## Panel1 - modify age slider depending on team
+@ app.callback(
+    Output('p1_rs_age', 'min'),
+    Output('p1_rs_age', 'max'),
+    Output('p1_rs_age', 'value'),
+    Output('p1_rs_age', 'marks'),
+    
+    Input('p1_dd_team', 'value'),
+)
+def p1_rs_age_get_options(p1_dd_team_value):
+
+    temp_team_ids = []
+    if p1_dd_team_value == 'ALL':
+        temp_team_ids = team_ids
+    else:
+        temp_team_ids = [p1_dd_team_value]
+        
+    print('slider age')
+        
+    if not p1_dd_team_value:
+        print('no')
+        return min_age, max_age, [min_age, max_age], {i: str(i) for i in range(min_age, max_age + 1, 4)}
+    else:
+        print('yes')
+        df_selected = df.query(f'`team_id`.isin(@temp_team_ids)')
+        selected_min_age = int( df_selected.player_age.min() )
+        selected_max_age = int( df_selected.player_age.max() )
+        print(selected_min_age, selected_max_age)
+        range_age = range(selected_min_age, selected_max_age+1, 4)
+        if range_age[-1] != selected_max_age:
+            range_age = [*range_age, selected_max_age]
+        
+        return selected_min_age, selected_max_age, [selected_min_age, selected_max_age], {i: str(i) for i in range_age}
     
 ## Panel1 - plot 1
 @ app.callback(

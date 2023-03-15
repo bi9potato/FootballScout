@@ -213,7 +213,7 @@ def p1_rs_year_get_options(p1_dd_team_value):
     if not p1_dd_team_value:
         return min_year, max_year, [min_year, max_year], {i: str(i) for i in range(min_year, max_year + 1)}
     else:
-        df_selected = df.query(f'`league_id`.isin(@temp_team_ids)')
+        df_selected = df.query(f'`team_id`.isin(@temp_team_ids)')
         selected_min_year = int( df_selected.league_season.min() )
         selected_max_year = int( df_selected.league_season.max() )
         return selected_min_year, selected_max_year, [selected_min_year, selected_max_year], {i: str(i) for i in range(selected_min_year, selected_max_year + 1)}
