@@ -309,6 +309,32 @@ def p2_dd_player_get_options(p2_dd_league_value, p2_dd_team_value ):
     specified_players = df_selected.player_name.unique()
     return [{'label': player_name, 'value': player_name_id[player_name]} for player_name in specified_players]
 
+
+## Panel2 - modify year slider depending on players
+@ app.callback(
+    Output('p2_rs_year', 'min'),
+    Output('p2_rs_year', 'max'),
+    Output('p2_rs_year', 'value'),
+    Output('p2_rs_year', 'marks'),
+    
+    Input('p2_dd_player', 'value'),
+)
+def p2_rs_year_get_options(p2_dd_player_value):
+
+    temp_player_ids = []
+    if not p2_dd_player_value:
+        temp_player_ids = []
+    else:
+        temp_player_ids = p2_dd_player_value
+        
+    if not temp_player_ids:
+        return min_year, max_year, [min_year, max_year], {i: str(i) for i in range(min_year, max_year + 1)}
+    else:
+        df_selected = df.query(f'`player_id`.isin(@temp_player_ids)')
+        selected_min_year = int( df_selected.league_season.min() )
+        selected_max_year = int( df_selected.league_season.max() )
+        return selected_min_year, selected_max_year, [selected_min_year, selected_max_year], {i: str(i) for i in range(selected_min_year, selected_max_year + 1)}
+
 # Panel2 - plots
 @ app.callback(
     Output('p2_Iframe_1', 'srcDoc'),
