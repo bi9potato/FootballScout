@@ -110,7 +110,7 @@ app.layout = dbc.Container([
             get_panel1_content()
 
 
-        ], label='Panel1'),
+        ], label='Overview'),
 
 
         # Panel2
@@ -119,7 +119,7 @@ app.layout = dbc.Container([
             get_panel2_content()
 
 
-        ], label='Panel2'),
+        ], label='Comparison'),
 
 
         # Panel3
@@ -129,7 +129,7 @@ app.layout = dbc.Container([
             get_panel3_content()
 
 
-        ], label='Panel3')
+        ], label='Prediction')
 
     ])
 
