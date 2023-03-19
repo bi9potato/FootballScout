@@ -102,7 +102,10 @@ def get_panel1_content():
 
                 ])
 
-            ], width=4),
+            ], width=4, style={
+                'background-color': '#e6e6e6',
+                'padding': 15,
+                'border-radius': 3}),
 
             # plots
             dbc.Col([
