@@ -83,6 +83,7 @@ def get_panel2_content():
 
         dbc.Row([
 
+            html.Br(),
             # sidebar
             dbc.Col([
 
