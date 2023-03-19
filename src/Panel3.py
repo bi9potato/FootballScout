@@ -39,9 +39,9 @@ app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
 def get_panel3_content():
     return dbc.Container([
 
+        html.Br(),
         dbc.Row([
 
-            html.Br(),
             # sidebar
             dbc.Col([
 
