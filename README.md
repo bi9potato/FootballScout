@@ -1,5 +1,5 @@
 # FootballScout 
-## https://footballscout-app.herokuapp.com/
+~~## https://footballscout-app.herokuapp.com/~~ the site is taken down due to insufficient funds
 Note: Please be patient as it is slow to load.
 
 ## Description & sketch
